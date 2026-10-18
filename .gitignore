@@ -4,3 +4,4 @@ build/
 *.iml
 *.class
 JUNIT_PRACTICE.md
+.gitignore
