@@ -26,7 +26,7 @@
 |-----------|----------|--------------|------------------------------------------------------------------------|---------------------|-----------|-------|
 | TC-1.2.1  | Снятие больше, чем на счёте | Баланс `250` | 1. `withdraw(260)`                                                     | `IllegalStateException` | H         | ✅ |
 | TC-1.2.2  | Пополнение отрицательной суммой | Баланс `300` | 1. `deposit(-250)`                                                     | `IllegalArgumentException` | H         | ✅ |
-| TC-1.2.3  | Снятие нуля | Баланс `250` | 1. `withdraw(0)`                                                       | `IllegalArgumentException` | M         | ⬜ |
+| TC-1.2.3  | Снятие нуля | Баланс `250` | 1. `withdraw(0)`                                                       | `IllegalArgumentException` | M         | ✅ |
 | TC-1.2.4  | Создание счёта с отрицательным балансом | Нет          | 1. `new BankAccount("Vasya", -300)`                                    | `IllegalArgumentException` | H         | ✅ |
 | TC-1.2.5  | Создание счёта с `null` именем | Нет          | 1. `new BankAccount(null, 500)`                                        | `IllegalArgumentException` | H         | ✅ |
 | TC-1.2.6  | Создание счёта с пустым именем | Нет          | 1. `new BankAccount("", 500)`                                          | `IllegalArgumentException` | M         | ✅ |
