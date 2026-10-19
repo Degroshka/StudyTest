@@ -22,18 +22,19 @@
 
 ### 1.2 Исключения (`assertThrows`)
 
-| ID       | Название | Предусловия | Шаги                           | Ожидаемый результат | Приоритет | Статус |
-|----------|----------|-------------|--------------------------------|---------------------|-----------|-------|
-| TC-1.2.1 | Снятие больше, чем на счёте | Баланс `250` | 1. `withdraw(260)`             | `IllegalStateException` | H | ⬜ |
-| TC-1.2.2 | Пополнение отрицательной суммой | Баланс `300` | 1. `deposit(-250)`             | `IllegalArgumentException` | H | ⬜ |
-| TC-1.2.3 | Снятие нуля | Баланс `250` | 1. `withdraw(0)`               | `IllegalArgumentException` | M | ⬜ |
-| TC-1.2.4 | Создание счёта с отрицательным балансом | Нет | 1. `new BankAccount("Vasya", -300)` | `IllegalArgumentException` | H | ⬜ |
-| TC-1.2.5 | Создание счёта с `null` именем | Нет | 1. `new BankAccount(null, 500)` | `IllegalArgumentException` | H | ⬜ |
-| TC-1.2.6 | Создание счёта с пустым именем | Нет | 1. `new BankAccount("", 500)`  | `IllegalArgumentException` | M | ⬜ |
-| TC-1.2.7 | Создание счёта с именем из пробелов | Нет | 1. `new BankAccount("   ", 500)` | `IllegalArgumentException` | L | ⬜ |
-| TC-1.2.8 | Пополнение нулём | Баланс `100` | 1. `deposit(0)`                | `IllegalArgumentException` | M | ⬜ |
-| TC-1.2.9 | Баланс не меняется после неудачного снятия | Баланс `250` | 1. `withdraw(260)` внутри `assertThrows`<br>2. Вызвать `getBalance()` | Баланс остался `250` | M | ⬜ |
-| TC-1.2.10| Имя счета из одних цифр отклоняется | Баланс `250` | 1. new BankAccount("123", 500) | `IllegalArgumentException` | M | ❌ |
+| ID        | Название | Предусловия  | Шаги                                                                   | Ожидаемый результат | Приоритет | Статус |
+|-----------|----------|--------------|------------------------------------------------------------------------|---------------------|-----------|-------|
+| TC-1.2.1  | Снятие больше, чем на счёте | Баланс `250` | 1. `withdraw(260)`                                                     | `IllegalStateException` | H         | ✅ |
+| TC-1.2.2  | Пополнение отрицательной суммой | Баланс `300` | 1. `deposit(-250)`                                                     | `IllegalArgumentException` | H         | ✅ |
+| TC-1.2.3  | Снятие нуля | Баланс `250` | 1. `withdraw(0)`                                                       | `IllegalArgumentException` | M         | ⬜ |
+| TC-1.2.4  | Создание счёта с отрицательным балансом | Нет          | 1. `new BankAccount("Vasya", -300)`                                    | `IllegalArgumentException` | H         | ✅ |
+| TC-1.2.5  | Создание счёта с `null` именем | Нет          | 1. `new BankAccount(null, 500)`                                        | `IllegalArgumentException` | H         | ✅ |
+| TC-1.2.6  | Создание счёта с пустым именем | Нет          | 1. `new BankAccount("", 500)`                                          | `IllegalArgumentException` | M         | ✅ |
+| TC-1.2.7  | Создание счёта с именем из пробелов | Нет          | 1. `new BankAccount("   ", 500)`                                       | `IllegalArgumentException` | L         | ✅ |
+| TC-1.2.8  | Пополнение нулём | Баланс `100` | 1. `deposit(0)`                                                        | `IllegalArgumentException` | M         | ✅ |
+| TC-1.2.9  | Баланс не меняется после неудачного снятия | Баланс `250` | 1. `withdraw(260)` внутри `assertThrows`<br>2. Вызвать `getBalance()`  | Баланс остался `250` | M         | ⬜ |
+| TC-1.2.10 | Имя счета из одних цифр отклоняется | Баланс `250` | 1. `new BankAccount("123", 500)`                                       | `IllegalArgumentException` | L         | ❌ |
+| TC-1.2.11 | Пополнение баланса NaN | Баланс `500` | 1. `new BankAccount("Alice", 500)`  <br>2. Вызвать `deposit(Double.Nan)` | `IllegalArgumentException` | H         | ❌ |
 
 ### 1.3 Заморозка счёта
 

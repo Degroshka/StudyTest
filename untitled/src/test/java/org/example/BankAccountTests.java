@@ -68,9 +68,37 @@ class BankAccountTests{
          assertEquals("Owner name cannot be blank",exception.getMessage());
     }
     @Test
+    @DisplayName("TC-1.2.6: Создание счёта с пустым именем")
+        void CreateBlankName_OwnerTest(){
+         IllegalArgumentException exception= assertThrows(IllegalArgumentException.class, ()->new BankAccount("",500));
+         assertEquals("Owner name cannot be blank",exception.getMessage());
+    }
+    @Test
+    @DisplayName("TC-1.2.7: Создание счёта с именем из пробелов")
+        void CreateSpaceName_OwnerTest(){
+         IllegalArgumentException exception= assertThrows(IllegalArgumentException.class, ()->new BankAccount("   ",500));
+         assertEquals("Owner name cannot be blank",exception.getMessage());
+    }
+    @Test
+    @DisplayName("TC-1.2.8: Пополнение нулём")
+    void DepositWithNull_BalanceTest(){
+        BankAccount acc = new BankAccount("Alice",500);
+        IllegalArgumentException exception=assertThrows(IllegalArgumentException.class,()->acc.deposit(0));
+        assertEquals("Deposit amount must be positive",exception.getMessage());
+    }
+
+    @Test
     @Disabled("BUG-1: Конструктор принмает имя из одних цифр")
     @DisplayName("TC-1.2.10: Имя счета из одних цифр отклоняется")
     void CreateAccount_NumericOwner_throwsIllegalTest(){
          assertThrows(IllegalArgumentException.class,()-> new BankAccount("1234",300));
      }
+    @Test
+    @Disabled("BUG-2: Депозит принимает NaN")
+    @DisplayName("TC-1.2.11: Пополнение баланса NaN")
+    void DepositWithNan_BalanceTest(){
+        BankAccount acc = new BankAccount("Alice",500);
+        assertThrows(IllegalArgumentException.class,()->acc.deposit(Double.NaN));
+    }
+
 }
