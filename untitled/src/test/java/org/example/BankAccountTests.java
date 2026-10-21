@@ -81,10 +81,57 @@ class BankAccountTests{
     }
     @Test
     @DisplayName("TC-1.2.8: Пополнение нулём")
-    void DepositWithNull_BalanceTest(){
+    void DepositWithZero_BalanceTest(){
         BankAccount acc = new BankAccount("Alice",500);
         IllegalArgumentException exception=assertThrows(IllegalArgumentException.class,()->acc.deposit(0));
         assertEquals("Deposit amount must be positive",exception.getMessage());
+    }
+    @Test
+    @DisplayName("TC-1.2.9: Баланс не меняется после неудачного снятия")
+    void withdraw_rejection_wontChangeBalance(){
+        BankAccount acc = new BankAccount("Alice",250);
+        assertThrows(IllegalStateException.class,()->acc.withdraw(260));
+        assertEquals(250,acc.getBalance());
+    }
+    @Test
+    @DisplayName("TC-1.3.1: Пополнение замороженного счёта")
+    void deposit_isFrozen_IllegalState(){
+         BankAccount acc =new BankAccount("Alice",100);
+         acc.freeze();
+         assertThrows(IllegalStateException.class,()->acc.deposit(50));
+         assertEquals(100,acc.getBalance(),0.001);
+    }
+    @Test
+    @DisplayName("TC-1.3.2: Снятие с замороженного счёта")
+    void withdraw_isFrozen_IllegalState(){
+        BankAccount acc =new BankAccount("Alice",100);
+        acc.freeze();
+        assertThrows(IllegalStateException.class,()->acc.withdraw(50));
+        assertEquals(100,acc.getBalance(),0.001);
+    }
+    @Test
+    @DisplayName("TC-1.3.3: Пополнение после разморозки")
+    void deposit_afterUnfreeze_succeed(){
+        BankAccount acc =new BankAccount("Alice",100);
+        acc.freeze();
+        acc.unfreeze();
+        acc.deposit(50);
+        assertEquals(150,acc.getBalance(),0.001);
+    }
+    @Test
+    @DisplayName("TC-1.3.4: Заморозка меняет флаг")
+    void freeze_isFrozen_true(){
+        BankAccount acc =new BankAccount("Alice",100);
+        acc.freeze();
+        assertTrue(acc.isFrozen());
+    }
+    @Test
+    @DisplayName("TC-1.3.5: Разморозка меняет флаг")
+    void unfreeze_isFrozen_false(){
+        BankAccount acc =new BankAccount("Alice",100);
+        acc.freeze();
+        acc.unfreeze();
+        assertFalse(acc.isFrozen());
     }
 
     @Test
