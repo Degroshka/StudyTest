@@ -94,6 +94,19 @@ class BankAccountTests{
         assertEquals(250,acc.getBalance());
     }
     @Test
+    @Disabled("BUG-1: Конструктор принмает имя из одних цифр")
+    @DisplayName("TC-1.2.10: Имя счета из одних цифр отклоняется")
+    void CreateAccount_NumericOwner_throwsIllegalTest(){
+        assertThrows(IllegalArgumentException.class,()-> new BankAccount("1234",300));
+    }
+    @Test
+    @Disabled("BUG-2: Депозит принимает NaN")
+    @DisplayName("TC-1.2.11: Пополнение баланса NaN")
+    void DepositWithNan_BalanceTest(){
+        BankAccount acc = new BankAccount("Alice",500);
+        assertThrows(IllegalArgumentException.class,()->acc.deposit(Double.NaN));
+    }
+    @Test
     @DisplayName("TC-1.3.1: Пополнение замороженного счёта")
     void deposit_isFrozen_IllegalState(){
          BankAccount acc =new BankAccount("Alice",100);
@@ -133,19 +146,54 @@ class BankAccountTests{
         acc.unfreeze();
         assertFalse(acc.isFrozen());
     }
-
     @Test
-    @Disabled("BUG-1: Конструктор принмает имя из одних цифр")
-    @DisplayName("TC-1.2.10: Имя счета из одних цифр отклоняется")
-    void CreateAccount_NumericOwner_throwsIllegalTest(){
-         assertThrows(IllegalArgumentException.class,()-> new BankAccount("1234",300));
-     }
-    @Test
-    @Disabled("BUG-2: Депозит принимает NaN")
-    @DisplayName("TC-1.2.11: Пополнение баланса NaN")
-    void DepositWithNan_BalanceTest(){
-        BankAccount acc = new BankAccount("Alice",500);
-        assertThrows(IllegalArgumentException.class,()->acc.deposit(Double.NaN));
+    @DisplayName("TC-1.4.1: Успешный перевод")
+    void transferTo_succeed(){
+         BankAccount A =new BankAccount("Alice",300);
+         BankAccount B =new BankAccount("Boris",50);
+         A.transferTo(B,100);
+         assertAll(
+                 ()->assertEquals(200,A.getBalance(),0.001),
+                 ()->assertEquals(150,B.getBalance(),0.001)
+         );
     }
+    @Test
+    @DisplayName("TC-1.4.2: Перевод с замороженного счёта")
+    void transferTo_fromFrozen_IllegalState(){
+         BankAccount A =new BankAccount("Alice",300);
+         BankAccount B =new BankAccount("Boris",50);
+         A.freeze();
+         IllegalStateException exception = assertThrows(IllegalStateException.class,()->A.transferTo(B,100));
+         assertEquals("Account is frozen",exception.getMessage());
+    }
+    @Test
+    @DisplayName("TC-1.4.3: Перевод больше баланса")
+    void transferTo_moreThanBalance_IllegalState(){
+        BankAccount A =new BankAccount("Alice",100);
+        BankAccount B =new BankAccount("Boris",0);
+        IllegalStateException exception = assertThrows(IllegalStateException.class,()->A.transferTo(B,500));
+        assertAll(
+                ()->assertEquals("Insufficient funds",exception.getMessage()),
+                ()->assertEquals(100,A.getBalance(),0.001),
+                ()->assertEquals(0,B.getBalance(),0.001)
+        );
+    }
+    @Test
+    @Disabled("BUG-3: transferTo снимает деньги при переводе на замороженный счёт")
+    @DisplayName("TC-1.4.4: Перевод на замороженный счёт")
+    void transferTo_toFrozen_IllegalState(){
+        BankAccount A =new BankAccount("Alice",300);
+        BankAccount B =new BankAccount("Boris",50);
+        B.freeze();
+        assertThrows(IllegalStateException.class,()->A.transferTo(B,100));
+        assertAll(
+                ()->assertEquals(50,B.getBalance(),0.001),
+                ()->assertEquals(300,A.getBalance(),0.001)
+        );
+    }
+
+
+
+
 
 }
